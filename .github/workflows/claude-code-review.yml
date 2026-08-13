@@ -23,6 +23,18 @@ jobs:
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           prompt: |
+            REPO: ${{ github.repository }}
+            PR NUMBER: ${{ github.event.pull_request.number }}
+
             Review this pull request. Focus on correctness bugs, security issues,
-            and reuse/simplification opportunities. Leave a single summary comment
-            with your findings; skip nitpicks that don't affect correctness or safety.
+            and reuse/simplification opportunities.
+
+            Note: The PR branch is already checked out in the current working directory.
+
+            Use `gh pr comment` to leave a single top-level summary comment with your
+            findings; skip nitpicks that don't affect correctness or safety. Use
+            `mcp__github_inline_comment__create_inline_comment` (with `confirmed: true`)
+            only to flag specific lines. Only post GitHub comments - don't submit
+            review text as your final message.
+          claude_args: |
+            --allowedTools "mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*)"
